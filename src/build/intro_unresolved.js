@@ -28,9 +28,11 @@
 }(function( Cldr ) {
 
 	// Build optimization hack to avoid duplicating functions across modules.
+	var itemGetResolved = Cldr._itemGetResolved;
 	var jsonMerge = Cldr._jsonMerge;
 	var pathNormalize = Cldr._pathNormalize;
 	var resourceGet = Cldr._resourceGet;
+	var validate = Cldr._validate;
 	var validatePresence = Cldr._validatePresence;
 	var validateTypePath = Cldr._validateTypePath;
 	var validateTypePlainObject = Cldr._validateTypePlainObject;

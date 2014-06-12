@@ -6,6 +6,11 @@ define([
 	return function( code, attributes ) {
 		var error, message;
 
+		// Allow deferred-attributes.
+		if ( typeof attributes === "function" ) {
+			attributes = attributes();
+		}
+
 		message = code + ( attributes && JSON ? ": " + JSON.stringify( attributes ) : "" );
 		error = new Error( message );
 		error.code = code;

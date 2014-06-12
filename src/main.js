@@ -1,5 +1,5 @@
 define([
-	"./common/create_error",
+	"./common/validate",
 	"./common/validate/presence",
 	"./common/validate/type/path",
 	"./common/validate/type/plain_object",
@@ -11,7 +11,7 @@ define([
 	"./resource/get",
 	"./util/always_array",
 	"./util/json/merge"
-], function( createError, validatePresence, validateTypePath, validateTypePlainObject, validateTypeString, itemGetResolved, likelySubtags, pathNormalize, removeLikelySubtags, resourceGet, alwaysArray, jsonMerge ) {
+], function( validate, validatePresence, validateTypePath, validateTypePlainObject, validateTypeString, itemGetResolved, likelySubtags, pathNormalize, removeLikelySubtags, resourceGet, alwaysArray, jsonMerge ) {
 
 	/**
 	 * new Cldr()
@@ -22,7 +22,7 @@ define([
 
 	// Build optimization hack to avoid duplicating functions across modules.
 	Cldr._alwaysArray = alwaysArray;
-	Cldr._createError = createError;
+	Cldr._validate = validate;
 	Cldr._itemGetResolved = itemGetResolved;
 	Cldr._jsonMerge = jsonMerge;
 	Cldr._pathNormalize = pathNormalize;
@@ -145,23 +145,36 @@ define([
 	/**
 	 * .get()
 	 */
-	Cldr.prototype.get = function( path ) {
+	Cldr.prototype.get = function( path, options ) {
+		var attributes, ret;
+		options = options || {};
 
 		validatePresence( path, "path" );
 		validateTypePath( path, "path" );
+		validateTypePlainObject( options, "options" );
 
-		return itemGetResolved( Cldr, path, this.attributes );
+		attributes = this.attributes;
+		ret = itemGetResolved( Cldr, path, attributes );
+
+		if ( options.throw ) {
+			validate( "E_MISSING_CLDR_ITEM", typeof ret !== "undefined", function() {
+				return { path: pathNormalize( path, attributes ).join( "/" ) };
+			});
+		}
+
+		return ret;
 	};
 
 	/**
 	 * .main()
 	 */
-	Cldr.prototype.main = function( path ) {
+	Cldr.prototype.main = function( path, options ) {
 		validatePresence( path, "path" );
 		validateTypePath( path, "path" );
+		// obs: options validations go thru .get().
 
 		path = alwaysArray( path );
-		return this.get( [ "main/{languageId}" ].concat( path ) );
+		return this.get( [ "main/{languageId}" ].concat( path ), options );
 	};
 
 	return Cldr;
