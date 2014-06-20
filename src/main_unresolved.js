@@ -41,8 +41,7 @@ define([
 
 		// 1: use languageId as locale on item lookup for simplification purposes, because no other extended subtag is used anyway on bundle parent lookup.
 		// 2: during init(), this method is called, but languageId is yet not defined. Use "" as a workaround in this very specific scenario.
-		ret = itemGetResolved( Cldr, path, attributes ) ||
-			itemLookup( Cldr, attributes && attributes.languageId /* 1 */ || "" /* 2 */, path, attributes );
+		ret = itemLookup( Cldr, attributes && attributes.languageId /* 1 */ || "" /* 2 */, path, attributes );
 
 		if ( options.throw ) {
 			validate( "E_MISSING_CLDR_ITEM", typeof ret !== "undefined", function() {

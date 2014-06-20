@@ -23,7 +23,6 @@ define([
 	// Build optimization hack to avoid duplicating functions across modules.
 	Cldr._alwaysArray = alwaysArray;
 	Cldr._validate = validate;
-	Cldr._itemGetResolved = itemGetResolved;
 	Cldr._jsonMerge = jsonMerge;
 	Cldr._pathNormalize = pathNormalize;
 	Cldr._resourceGet = resourceGet;
